@@ -5,15 +5,11 @@ export default function AccountLayout({
                                           children,
                                       }: Readonly<{ children: ReactNode }>) {
     return (
-        <div>
-            <table>
-                <tbody>
-                <tr>
-                    <td valign="top"><AccountNavigation /></td>
-                    <td valign="top" width="100%">{children}</td>
-                </tr>
-                </tbody>
-            </table>
+        <div className="flex">
+            <div className="w-40 shrink-0">
+                <AccountNavigation />
+            </div>
+            <div className="flex-1 p-3">{children}</div>
         </div>
     );
 }
