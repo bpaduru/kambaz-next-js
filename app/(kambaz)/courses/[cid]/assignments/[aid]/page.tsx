@@ -1,4 +1,13 @@
-export default function AssignmentEditor() {
+import Link from "next/link";
+import * as db from "../../../../database";
+
+export default async function AssignmentEditor({
+                                                   params,
+                                               }: {
+    params: Promise<{ cid: string; aid: string }>;
+}) {
+    const { cid, aid } = await params;
+    const assignment = db.assignments.find((a) => a._id === aid);
     return (
         <div id="wd-assignments-editor" className="max-w-2xl">
             <label htmlFor="wd-name" className="mb-1 block text-sm font-medium">
@@ -6,34 +15,38 @@ export default function AssignmentEditor() {
             </label>
             <input
                 id="wd-name"
-                defaultValue="A1 - ENV + HTML"
+                defaultValue={assignment?.title ?? ""}
                 className="mb-4 w-full rounded border border-gray-300 p-2"
             />
+            <p className="mb-4 text-sm text-neutral-500">Assignment id: {aid}</p>
             <label className="mb-1 block text-sm font-medium">Description</label>
             <textarea
                 id="wd-description"
                 rows={5}
-                defaultValue="The assignment is available online. Submit a link to the landing page of"
+                defaultValue={assignment?.description ?? ""}
                 className="mb-4 w-full rounded border border-gray-300 p-2"
             />
-            <div className="flex items-center gap-3">
-                <label htmlFor="wd-points" className="text-sm font-medium">
-                    Points
-                </label>
-                <input
-                    id="wd-points"
-                    defaultValue={100}
-                    className="w-24 rounded border border-gray-300 p-2"
-                />
-            </div>
-            <div className="mt-4 flex gap-2">
-                <button className="rounded bg-red-700 px-4 py-2 text-sm text-white">
-                    Save
-                </button>
-                <button className="rounded border border-gray-400 px-4 py-2 text-sm">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    );
-}
+            <table>
+                <tbody>
+                <tr>
+                    <td align="right" valign="top">
+                        <label htmlFor="wd-points">Points</label>
+                    </td>
+                    <td>
+                        <input
+                            id="wd-points"
+                            defaultValue={assignment?.points ?? 100}
+                            className="w-24 rounded border border-gray-300 p-2"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" valign="top">
+                        <label htmlFor="wd-due-date">Due</label>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            id="wd-due-date"
+                            defaultValue={assignment?.due}
+                            className="w-40
