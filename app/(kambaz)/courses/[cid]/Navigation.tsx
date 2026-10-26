@@ -1,65 +1,46 @@
+"use client";
 import Link from "next/link";
-import { AiOutlineHome } from "react-icons/ai";
-import { LiaBookSolid } from "react-icons/lia";
-import { FaRegMessage, FaVideo } from "react-icons/fa6";
-import { MdOutlineAssignment } from "react-icons/md";
-import { BsFileText } from "react-icons/bs";
-import { FaRegAddressBook } from "react-icons/fa";
+import { usePathname } from "next/navigation";
+import "../../kambaz.css";
 
-export default function CourseNavigation() {
+const LINKS = [
+    { segment: "home", id: "wd-course-home-link", label: "Home" },
+    { segment: "modules", id: "wd-course-modules-link", label: "Modules" },
+    { segment: "piazza", id: "wd-course-piazza-link", label: "Piazza" },
+    { segment: "zoom", id: "wd-course-zoom-link", label: "Zoom" },
+    { segment: "assignments", id: "wd-course-assignments-link", label: "Assignments" },
+    { segment: "quizzes", id: "wd-course-quizzes-link", label: "Quizzes" },
+    { segment: "grades", id: "wd-course-grades-link", label: "Grades" },
+    { segment: "people/table", id: "wd-course-people-link", label: "People" },
+    { segment: "announcements", id: "wd-course-announcements-link", label: "Announcements" },
+] as const;
+
+export default function CourseNavigation({ cid }: { cid: string }) {
+    const pathname = usePathname() ?? "";
+    const inCourse = pathname.startsWith(`/courses/${cid}`);
     return (
-        <div
-            id="wd-courses-navigation"
-            className="w-40 shrink-0 border-r border-gray-300 bg-gray-50"
-        >
-            <Link
-                href="/courses/1234/home"
-                className="flex items-center gap-2 border-b border-gray-200 px-3 py-2 text-sm text-red-700 no-underline"
-            >
-                <AiOutlineHome /> Home
-            </Link>
-            <Link
-                href="/courses/1234/modules"
-                className="flex items-center gap-2 border-b border-gray-200 px-3 py-2 text-sm text-red-700 no-underline"
-            >
-                <LiaBookSolid /> Modules
-            </Link>
-            <Link
-                href="/courses/1234/piazza"
-                className="flex items-center gap-2 border-b border-gray-200 px-3 py-2 text-sm text-red-700 no-underline"
-            >
-                <FaRegMessage /> Piazza
-            </Link>
-            <Link
-                href="/courses/1234/zoom"
-                className="flex items-center gap-2 border-b border-gray-200 px-3 py-2 text-sm text-red-700 no-underline"
-            >
-                <FaVideo /> Zoom
-            </Link>
-            <Link
-                href="/courses/1234/assignments"
-                className="flex items-center gap-2 border-b border-gray-200 px-3 py-2 text-sm text-red-700 no-underline"
-            >
-                <MdOutlineAssignment /> Assignments
-            </Link>
-            <Link
-                href="/courses/1234/quizzes"
-                className="flex items-center gap-2 border-b border-gray-200 px-3 py-2 text-sm text-red-700 no-underline"
-            >
-                <BsFileText /> Quizzes
-            </Link>
-            <Link
-                href="/courses/1234/grades"
-                className="flex items-center gap-2 border-b border-gray-200 px-3 py-2 text-sm text-red-700 no-underline"
-            >
-                <BsFileText /> Grades
-            </Link>
-            <Link
-                href="/courses/1234/people/table"
-                className="flex items-center gap-2 px-3 py-2 text-sm text-red-700 no-underline"
-            >
-                <FaRegAddressBook /> People
-            </Link>
+        <div id="wd-courses-navigation" className="wd list-group rounded-none text-lg">
+            {LINKS.map(({ segment, id, label }) => {
+                const href = `/courses/${cid}/${segment}`;
+                const active = inCourse
+                    ? pathname === href ||
+                    (segment !== "home" && pathname.startsWith(href))
+                    : segment === "home";
+                return (
+                    <Link
+                        key={id}
+                        href={href}
+                        id={id}
+                        className={
+                            active
+                                ? "list-group-item active border-0"
+                                : "list-group-item border-0 text-red-600"
+                        }
+                    >
+                        {label}
+                    </Link>
+                );
+            })}
         </div>
     );
 }

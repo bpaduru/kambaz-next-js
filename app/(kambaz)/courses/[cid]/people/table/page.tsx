@@ -1,15 +1,23 @@
-export default function People() {
-    const people = [
-        { first: "Tony", last: "Stark", login: "001234561S", section: "S101", role: "STUDENT", lastActivity: "2020-10-01", totalActivity: "10:21:32" },
-        { first: "Alice", last: "Wonderland", login: "001234562S", section: "S101", role: "STUDENT", lastActivity: "2020-10-02", totalActivity: "08:15:10" },
-        { first: "Jose", last: "Annunziato", login: "001234001F", section: "S101", role: "FACULTY", lastActivity: "2020-10-03", totalActivity: "22:40:00" },
-    ];
+import { FaUserCircle } from "react-icons/fa";
+import * as db from "../../../../database";
+
+export default async function PeopleTable({
+                                              params,
+                                          }: {
+    params: Promise<{ cid: string }>;
+}) {
+    const { cid } = await params;
+    const { users, enrollments } = db;
+    const enrolled = users.filter((usr) =>
+        enrollments.some(
+            (enrollment) => enrollment.user === usr._id && enrollment.course === cid,
+        ),
+    );
     return (
-        <div id="wd-people-table">
-            <h3 className="mb-3 text-xl font-semibold">People</h3>
+        <div id="wd-people-table" className="overflow-x-auto">
             <table className="w-full border-collapse text-left text-sm">
                 <thead>
-                <tr className="border-b border-gray-300">
+                <tr className="border-b border-neutral-300">
                     <th className="p-2">Name</th>
                     <th className="p-2">Login ID</th>
                     <th className="p-2">Section</th>
@@ -19,17 +27,18 @@ export default function People() {
                 </tr>
                 </thead>
                 <tbody>
-                {people.map((p) => (
-                    <tr key={p.login} className="border-b border-gray-200">
-                        <td className="wd-full-name p-2">
-                            <span className="wd-first-name">{p.first}</span>{" "}
-                            <span className="wd-last-name">{p.last}</span>
+                {enrolled.map((user) => (
+                    <tr key={user._id} className="odd:bg-neutral-50">
+                        <td className="wd-full-name p-2 text-nowrap">
+                            <FaUserCircle className="me-2 inline align-middle text-3xl text-neutral-500" />
+                            <span className="wd-first-name">{user.firstName}</span>{" "}
+                            <span className="wd-last-name">{user.lastName}</span>
                         </td>
-                        <td className="wd-login-id p-2">{p.login}</td>
-                        <td className="wd-section p-2">{p.section}</td>
-                        <td className="wd-role p-2">{p.role}</td>
-                        <td className="wd-last-activity p-2">{p.lastActivity}</td>
-                        <td className="wd-total-activity p-2">{p.totalActivity}</td>
+                        <td className="wd-login-id p-2">{user.loginId}</td>
+                        <td className="wd-section p-2">{user.section}</td>
+                        <td className="wd-role p-2">{user.role}</td>
+                        <td className="wd-last-activity p-2">{user.lastActivity}</td>
+                        <td className="wd-total-activity p-2">{user.totalActivity}</td>
                     </tr>
                 ))}
                 </tbody>
