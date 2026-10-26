@@ -49,4 +49,41 @@ export default async function AssignmentEditor({
                             type="date"
                             id="wd-due-date"
                             defaultValue={assignment?.due}
-                            className="w-40
+                            className="w-40 rounded border border-gray-300 p-2"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" valign="top">
+                        <label htmlFor="wd-available-from">Available from</label>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            id="wd-available-from"
+                            defaultValue={assignment?.available}
+                            className="w-40 rounded border border-gray-300 p-2"
+                        />
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div className="mt-4 flex gap-2">
+                <Link
+                    href={`/courses/${cid}/assignments`}
+                    id="wd-save"
+                    className="rounded bg-red-700 px-4 py-2 text-sm text-white no-underline"
+                >
+                    Save
+                </Link>
+                <Link
+                    href={`/courses/${cid}/assignments`}
+                    id="wd-cancel"
+                    className="rounded border border-gray-400 px-4 py-2 text-sm no-underline"
+                >
+                    Cancel
+                </Link>
+            </div>
+        </div>
+    );
+}
