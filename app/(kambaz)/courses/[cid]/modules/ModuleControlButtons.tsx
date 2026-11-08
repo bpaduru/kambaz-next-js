@@ -13,11 +13,13 @@ export default function ModuleControlButtons({
     return (
         <div className="flex items-center gap-2">
             <FaPencilAlt
+                id={`wd-edit-module-${moduleId}`}
                 className="cursor-pointer text-blue-600"
                 onClick={() => editModule(moduleId)}
                 title="Edit module"
             />
             <FaTrash
+                id={`wd-delete-module-${moduleId}`}
                 className="cursor-pointer text-red-600"
                 onClick={() => deleteModule(moduleId)}
                 title="Delete module"
