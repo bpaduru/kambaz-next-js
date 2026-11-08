@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
 import { useParams } from "next/navigation";
 import { useModulesStore } from "../../../store/modulesStore";
 
@@ -18,7 +17,7 @@ export default function ModuleEditor() {
                 id="wd-add-module-btn"
                 onClick={() => setShow(true)}
             >
-                <FaPlus /> Module
+                + Module
             </button>
             {show && (
                 <div
