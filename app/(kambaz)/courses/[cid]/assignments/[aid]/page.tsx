@@ -1,88 +1,89 @@
-import Link from "next/link";
-import * as db from "../../../../database";
+"use client";
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { emptyAssignment, useAssignmentsStore } from "../../../../store/assignmentsStore";
 
-export default async function AssignmentEditor({
-                                                   params,
-                                               }: {
-    params: Promise<{ cid: string; aid: string }>;
-}) {
-    const { cid, aid } = await params;
-    const assignment = db.assignments.find((a) => a._id === aid);
+export default function AssignmentEditor() {
+    const { cid, aid } = useParams();
+    const router = useRouter();
+    const findAssignment = useAssignmentsStore((state) => state.findAssignment);
+    const addAssignment = useAssignmentsStore((state) => state.addAssignment);
+    const updateAssignment = useAssignmentsStore((state) => state.updateAssignment);
+
+    const isNew = aid === "new";
+    const existing = !isNew ? findAssignment(String(aid)) : undefined;
+    const [assignment, setAssignment] = useState(
+        existing ?? { ...emptyAssignment, course: String(cid) },
+    );
+
+    const save = () => {
+        if (isNew) {
+            addAssignment(assignment);
+        } else {
+            updateAssignment(assignment);
+        }
+        router.push(`/courses/${cid}/assignments`);
+    };
+
     return (
         <div id="wd-assignments-editor" className="max-w-2xl">
-            <label htmlFor="wd-name" className="mb-1 block text-sm font-medium">
-                Assignment Name
-            </label>
+            <label htmlFor="wd-name" className="mb-1 block text-sm font-medium">Assignment Name</label>
             <input
                 id="wd-name"
-                defaultValue={assignment?.title ?? ""}
+                value={assignment.title}
+                onChange={(e) => setAssignment({ ...assignment, title: e.target.value })}
                 className="mb-4 w-full rounded border border-gray-300 p-2"
             />
-            <p className="mb-4 text-sm text-neutral-500">Assignment id: {aid}</p>
             <label className="mb-1 block text-sm font-medium">Description</label>
             <textarea
                 id="wd-description"
                 rows={5}
-                defaultValue={assignment?.description ?? ""}
+                value={assignment.description}
+                onChange={(e) => setAssignment({ ...assignment, description: e.target.value })}
                 className="mb-4 w-full rounded border border-gray-300 p-2"
             />
-            <table>
-                <tbody>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-points">Points</label>
-                    </td>
-                    <td>
-                        <input
-                            id="wd-points"
-                            defaultValue={assignment?.points ?? 100}
-                            className="w-24 rounded border border-gray-300 p-2"
-                        />
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-due-date">Due</label>
-                    </td>
-                    <td>
-                        <input
-                            type="date"
-                            id="wd-due-date"
-                            defaultValue={assignment?.due}
-                            className="w-40 rounded border border-gray-300 p-2"
-                        />
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-available-from">Available from</label>
-                    </td>
-                    <td>
-                        <input
-                            type="date"
-                            id="wd-available-from"
-                            defaultValue={assignment?.available}
-                            className="w-40 rounded border border-gray-300 p-2"
-                        />
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <div className="mt-4 flex gap-2">
-                <Link
-                    href={`/courses/${cid}/assignments`}
-                    id="wd-save"
-                    className="rounded bg-red-700 px-4 py-2 text-sm text-white no-underline"
-                >
+            <div className="mb-4 flex items-center gap-3">
+                <label htmlFor="wd-points" className="text-sm font-medium">Points</label>
+                <input
+                    id="wd-points"
+                    type="number"
+                    value={assignment.points}
+                    onChange={(e) => setAssignment({ ...assignment, points: Number(e.target.value) })}
+                    className="w-24 rounded border border-gray-300 p-2"
+                />
+            </div>
+            <div className="mb-4 flex items-center gap-3">
+                <label htmlFor="wd-due-date" className="text-sm font-medium">Due</label>
+                <input
+                    id="wd-due-date"
+                    type="date"
+                    value={assignment.due}
+                    onChange={(e) => setAssignment({ ...assignment, due: e.target.value })}
+                    className="rounded border border-gray-300 p-2"
+                />
+            </div>
+            <div className="mb-4 flex items-center gap-3">
+                <label htmlFor="wd-available-from" className="text-sm font-medium">Available from</label>
+                <input
+                    id="wd-available-from"
+                    type="date"
+                    value={assignment.available}
+                    onChange={(e) => setAssignment({ ...assignment, available: e.target.value })}
+                    className="rounded border border-gray-300 p-2"
+                />
+            </div>
+            <div className="flex gap-2">
+                <button type="button" onClick={save} id="wd-save" className="rounded bg-red-700 px-4 py-2 text-sm text-white">
                     Save
-                </Link>
-                <Link
-                    href={`/courses/${cid}/assignments`}
+                </button>
+                <button
+                    type="button"
+                    onClick={() => router.push(`/courses/${cid}/assignments`)}
                     id="wd-cancel"
-                    className="rounded border border-gray-400 px-4 py-2 text-sm no-underline"
+                    className="rounded border border-gray-400 px-4 py-2 text-sm"
                 >
                     Cancel
-                </Link>
+                </button>
             </div>
         </div>
     );
