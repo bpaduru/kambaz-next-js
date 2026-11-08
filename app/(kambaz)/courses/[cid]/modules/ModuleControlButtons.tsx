@@ -15,22 +15,18 @@ export default function ModuleControlButtons({
             <button
                 type="button"
                 id={`wd-edit-module-${moduleId}`}
-                aria-label="Edit module"
-                title="Edit module"
                 onClick={() => editModule(moduleId)}
-                className="border-0 bg-transparent p-0"
+                className="inline-flex items-center gap-1 border-0 bg-transparent p-0 text-blue-600"
             >
-                <FaPencilAlt className="text-blue-600" />
+                <FaPencilAlt /> Edit
             </button>
             <button
                 type="button"
                 id={`wd-delete-module-${moduleId}`}
-                aria-label="Delete module"
-                title="Delete module"
                 onClick={() => deleteModule(moduleId)}
-                className="border-0 bg-transparent p-0"
+                className="inline-flex items-center gap-1 border-0 bg-transparent p-0 text-red-600"
             >
-                <FaTrash className="text-red-600" />
+                <FaTrash /> Delete
             </button>
             <FaCheckCircle className="text-green-600" />
             <BsPlus className="text-3xl" />
