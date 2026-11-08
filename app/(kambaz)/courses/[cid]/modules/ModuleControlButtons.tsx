@@ -12,18 +12,26 @@ export default function ModuleControlButtons({
     const editModule = useModulesStore((state) => state.editModule);
     return (
         <div className="flex items-center gap-2">
-            <FaPencilAlt
+            <button
+                type="button"
                 id={`wd-edit-module-${moduleId}`}
-                className="cursor-pointer text-blue-600"
-                onClick={() => editModule(moduleId)}
+                aria-label="Edit module"
                 title="Edit module"
-            />
-            <FaTrash
+                onClick={() => editModule(moduleId)}
+                className="border-0 bg-transparent p-0"
+            >
+                <FaPencilAlt className="text-blue-600" />
+            </button>
+            <button
+                type="button"
                 id={`wd-delete-module-${moduleId}`}
-                className="cursor-pointer text-red-600"
-                onClick={() => deleteModule(moduleId)}
+                aria-label="Delete module"
                 title="Delete module"
-            />
+                onClick={() => deleteModule(moduleId)}
+                className="border-0 bg-transparent p-0"
+            >
+                <FaTrash className="text-red-600" />
+            </button>
             <FaCheckCircle className="text-green-600" />
             <BsPlus className="text-3xl" />
             <IoEllipsisVertical className="text-xl" />
